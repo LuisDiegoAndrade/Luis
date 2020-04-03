@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+       crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Baskervville&display=swap" rel="stylesheet">
+
+
+        <title>Luis Diego</title>
+
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-light bg-steel fixed-top">
+        <div class="container">
+          <img width="220" src="{{url_for('static', filename='luis.png')}}"/>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+
+              <!--<a class="nav-item nav-link" href=""></a>
+              <a class="nav-item nav-link" href=""></a>-->
+              <a class="nav-item nav-link" href="/login">Github</a>
+              <a class="nav-item nav-link" href="/signup">Linkedin</a>
+
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+
+              <a class="nav-item nav-link" href="./wash">C & JavaScript</a>
+              <a class="nav-item nav-link" href="https://luisdiego.pythonanywhere.com/">Linkets</a>
+              <a class="nav-item nav-link" href="#">Threejs</a>
+
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div id="info" class="alert alert-info alert-dismissible">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <p> Foward: W</p>
+      <p> Backward: S</p>
+      <p> Left: A</p>
+      <p> Right: D</p>
+
+      <p> Look Left: Left Key </p>
+      <p> Look Right: Right Key </p>
+    </div>
+    <main role="main" class="container">
+
+      <div class="col-md-12">
+
+        <div id="css"></div>
+        <div id="webgl"></div>
+
+
+
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+    </main>
+
+
+    <!-- Optional JavaScript -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src = "{{url_for('static', filename='js/three.min.js')}}"></script>
+    <script src = "{{url_for('static', filename='js/GLTFLoader.js')}}"></script>
+    <script src = "{{url_for('static', filename='js/OrbitControls.js')}}"></script>
+    <script src = "{{url_for('static', filename='js/FirstPersonControls.js')}}"></script>
+    <script src = "{{url_for('static', filename='js/CSS3DRenderer.js')}}"></script>
+
+
+    <script type="text/javascript">
+      let scene, cssScene, camera, css3d_renderer, renderer, fp, mesh, obj, delta;
+      let keys = {};
+      let player = {speed: 9};
+      let data = document.createElement('p');
+      let info = document.createElement('div');
+      let namesWallForm = document.createElement('div');
+      let webglEle = document.getElementById('webgl');
+      let cssEle = document.getElementById('css');
+      let clock = new THREE.Clock();
+      let raycaster = new THREE.Raycaster();
+      let mouse = new THREE.Vector2();
+
+
+      window.addEventListener( 'mousemove', onMouseMove, false );
+
+      function onMouseMove( event ) {
+
+      	// calculate mouse position in normalized device coordinates
+      	// (-1 to +1) for both components
+
+      	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+      }
+
+      function getData(e) {
+        e.preventDefault();
+      }
+
+
+      function init() {
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff);
+        cssScene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight,0.5,5000);
+        camera.position.set(400,30.5,900);
+
+
+
+        // Art Info
+        let artInfo = new THREE.Mesh(
+        new THREE.PlaneGeometry(50,50,10,10),
+        new THREE.MeshBasicMaterial({color: 0xd3d3d3, wireframe:true})
+        );
+        artInfo.position.y += 25;
+        artInfo.position.z -= 25;
+        artInfo.position.x -= 55;
+        artInfo.rotation.y += Math.PI/2;
+        scene.add(artInfo);
+
+        // Programming
+        let codeInfo = new THREE.Mesh(
+        new THREE.PlaneGeometry(50,50,10,10),
+        new THREE.MeshBasicMaterial({color: 0xd3d3d3, wireframe:true})
+        );
+        codeInfo.position.y += 25;
+        codeInfo.position.z -= 80;
+        codeInfo.position.x += 35;
+        //codeInfo.rotation.y += Math.PI/2;
+        scene.add(codeInfo);
+
+
+
+
+
+        /*fp = new THREE.FirstPersonControls(camera);
+        fp.lookSpeed = 0.14;
+        fp.movementSpeed = 3.5;*/
+
+
+        //Make css3dobject with html we want to animate
+        let element = document.createElement('iframe');
+        element.src = "http://localhost:8080";
+        element.style.width = "512px";
+        element.style.height = "512px";
+        let cssObj = new THREE.CSS3DObject(element);
+        cssScene.add(cssObj);
+
+
+        namesWallForm.innerHTML = `<div class="alert alert-info alert-dismissible">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <form id="write">
+            <input type="text" name="name" placeholder="Name (Optional)"/><br><br>
+            <input type="text" name="message" placeholder="Write Something cool"/><br><br>
+            <input class="btn btn-outline-info" name="submit" type="submit" value="Write">
+          </form>
+
+        </div>`;
+
+        cssObj = new THREE.CSS3DObject(namesWallForm);
+        cssObj.position.y += 75;
+        cssObj.position.z += 700;
+        cssObj.position.x -= 85;
+        //cssObj.position.z -= 100;
+        cssObj.rotation.y += Math.PI/2;
+        cssScene.add(cssObj);
+
+
+        data.textContent = "LUIS WAS \n HERE";
+        cssObj = new THREE.CSS3DObject(data);
+        cssObj.position.y += 75;
+        cssObj.position.z += 370;
+        cssObj.position.x -= 85;
+        cssObj.rotation.y += Math.PI/2;
+        cssScene.add(cssObj);
+
+
+        // Renderer(s)
+        css3d_renderer = new THREE.CSS3DRenderer();
+        css3d_renderer.setSize(window.innerWidth-(window.innerWidth/5), window.innerHeight);
+        css3d_renderer.domElement.style.position = 'absolute';
+        css3d_renderer.domElement.style.top = 0;
+        //css3d_renderer.domElement.style.zIndex = 1;
+	      //css3d_renderer.domElement.style.margin	= 0;
+	      //css3d_renderer.domElement.style.padding	= 0;
+        cssEle.appendChild(css3d_renderer.domElement);
+
+        renderer = new THREE.WebGLRenderer({alpha:true});
+        renderer.setClearColor(0xffffff, 0.0);
+        renderer.setSize(window.innerWidth-(window.innerWidth/5), window.innerHeight);
+        //renderer.domElement.style.position = 'absolute';
+	      //renderer.domElement.style.top	= 0;
+	      //renderer.domElement.style.zIndex	= 1;
+        //css3d_renderer.domElement.appendChild(renderer.domElement);
+        //document.body.appendChild(css3d_renderer.domElement);
+        webglEle.appendChild(renderer.domElement);
+
+
+
+
+        // Light Sources
+        hlight = new THREE.AmbientLight(0x404040,0.2);
+        hlight.castShadow = false;
+        scene.add(hlight);
+
+        directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+        directionalLight.position.set(0,3,0);
+        directionalLight.castShadow = false;
+        scene.add(directionalLight);
+
+
+        /*light = new THREE.PointLight(0xc4c4c4, 1);
+        light.position.set(0,100,0);
+        scene.add(light);*/
+
+        //animate();
+
+
+
+
+
+        // Load in 3D Models
+        let loader = new THREE.GLTFLoader();
+
+
+         loader.load('./static/bold_brash/scene.gltf', (gltf) => {
+           obj = gltf.scene.children[0];
+           //console.log(obj);
+           //obj.scale.set(0., 0.05,0.05);
+           obj.position.z -= 30;
+           obj.position.x -= 100;
+           obj.rotation.z += Math.PI/2;
+           let axis = new THREE.AxisHelper(9);
+           obj.add(axis);
+           scene.add(gltf.scene);
+           animate();
+           //renderer.render(scene,camera);
+         });
+
+
+          loader.load('./static/the_magic_room/scene.gltf', (gltf) => {
+            obj = gltf.scene.children[0];
+            //console.log(obj);
+            //obj.scale.set(0., 0.05,0.05);
+            //obj.position.x += 23.5;
+
+
+            let axis = new THREE.AxisHelper(5);
+            obj.add(axis);
+            scene.add(gltf.scene);
+            animate();
+            //renderer.render(scene,camera);
+          });
+
+
+      } // function init() END ~~!!
+
+
+
+
+      function animate() {
+        /*delta = clock.getDelta();
+        fp.update(delta);*/
+
+
+        if (keys[87]) {
+          console.log("W");
+          camera.position.x -= Math.sin(camera.rotation.y)*player.speed;
+          camera.position.z -= Math.cos(camera.rotation.y)*player.speed;
+        }
+        if (keys[83]) {
+          console.log("S");
+          camera.position.x += Math.sin(camera.rotation.y)*player.speed;
+          camera.position.z += Math.cos(camera.rotation.y)*player.speed;
+        }
+
+        if (keys[68]) {
+          console.log("A");
+          camera.position.x -= Math.sin(camera.rotation.y - Math.PI/2)*player.speed;
+          camera.position.z -= Math.cos(camera.rotation.y - Math.PI/2)*player.speed;
+        }
+        if (keys[65]) {
+          console.log("D");
+          camera.position.x += Math.sin(camera.rotation.y - Math.PI/2)*player.speed;
+          camera.position.z += Math.cos(camera.rotation.y - Math.PI/2)*player.speed;
+        }
+
+
+
+        if (keys[39]) {
+          console.log("R arrow key");
+          camera.rotation.y -= Math.PI*0.01;
+        }
+
+        if (keys[37]) {
+          console.log("L arrow key");
+          camera.rotation.y += Math.PI*0.01;
+        }
+
+        render();
+        requestAnimationFrame(animate);
+
+      }
+
+      function render() {
+        raycaster.setFromCamera( mouse, camera );
+        let intersects = raycaster.intersectObjects( scene.children );
+
+      	 if (intersects.length > 0) {
+           console.log(intersects[0].object.id);
+           switch (intersects[0].object.id) {
+             case 8:
+               info.innerHTML = `<div class="alert alert-info alert-dismissible">
+                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                 <a href="https://github.com/LuisDiegoAndrade" target="_blank"><i style="font-size:30px" class="fab fa-github"></i></a>
+
+                 <a href="https://google-gruyere.appspot.com/629844904335140631618946281389223823081/" target="_blank"><i style="font-size:30px" class="fas fa-bug"></i></a>
+
+               </div>`;
+               cssObj = new THREE.CSS3DObject(info);
+               cssObj.position.y += 100;
+               cssObj.position.x -= 50;
+               //cssObj.position.z -= 100;
+               cssObj.rotation.y += Math.PI/2;
+               cssScene.add(cssObj);
+              console.log(intersects[0]);
+              console.log("Thats the art!");
+               break;
+
+               case 9:
+                 info.innerHTML = `<div class="alert alert-info alert-dismissible">
+                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                   <a href="https://www.qwiklabs.com/public_profiles/43db876a-204d-41ab-a745-dd18d1b05e31" target="_blank"><i style="font-size:60px" class="fab fa-google"></i></a>
+                   <a href="https://www.hackerrank.com/results/hack-the-interview-u-s-2/landradegonzalez?h_r=profile" target="_blank"><i style="font-size:60px" class="fab fa-hackerrank"></i></a>
+
+                 </div>`;
+
+                 cssObj = new THREE.CSS3DObject(info);
+                 cssObj.position.y += 85;
+                 cssObj.position.z -= 100;
+                 cssObj.position.x += 35;
+                 //cssObj.position.z -= 100;
+                 //cssObj.rotation.y += Math.PI/2;
+                 cssScene.add(cssObj);
+                console.log(intersects[0]);
+                console.log("Thats the code!");
+                 break;
+
+           }
+
+      	}
+
+        renderer.render(scene, camera);
+        css3d_renderer.render(cssScene, camera);
+
+      }
+
+
+      function key_down(event) {
+          keys[event.keyCode] = true;
+      }
+
+      function key_up(event) {
+          keys[event.keyCode] = false;
+      }
+
+      //begin
+      window.addEventListener('keydown', key_down);
+      window.addEventListener('keyup', key_up);
+      init();
+    </script>
+
+
+
+</body>
+</html>

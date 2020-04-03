@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+<div id="domElement"> </div>
+
+    <script src = "three.min.js"></script>
+    <script src = "GLTFLoader.js"></script>
+    <script src = "OrbitControls.js"></script>
+    <script src = "FirstPersonControls.js"></script>
+
+    <script type="text/javascript">
+      let scene, camera, renderer, fp;
+
+
+      function init() {
+
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+
+        camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight,1,5000);
+        //camera.position.y = 45/180*Math.PI;
+        //camera.position.x = 100;
+        //camera.position.y = 400;
+        camera.position.z = 3;
+
+        fp = new THREE.FirstPersonControls(camera);
+        fp.lookSpeed = 0.09;
+
+
+        renderer = new THREE.WebGLRenderer({antialias:true});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement)
+
+        //controls = new THREE.OrbitControls(camera, renderer.domElement);
+        //controls.addEventListener('change', renderer);
+
+        hlight = new THREE.AmbientLight(0x404040,3);
+        scene.add(hlight);
+
+        /*directionalLight = new THREE.DirectionalLight(0xffffff, 100);
+        directionalLight.position.set(0,1,0);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);*/
+
+
+        /*light = new THREE.PointLight(0xc4c4c4, 10);
+        light.position.set(100,0,-100);
+        scene.add(light);*/
+
+
+        /*
+        light3 = new THREE.PointLight(0xc4c4c4, 10);
+        light.position.set(0,100,-500);
+        scene.add(light3);
+        light4 = new THREE.PointLight(0xc4c4c4, 10);
+        light.position.set(-500,300,0);
+        scene.add(light4);*/
+
+
+
+
+
+        let loader = new THREE.GLTFLoader();
+         loader.load('./scene.gltf', (gltf) => {
+           computer = gltf.scene.children[0];
+           computer.scale.set(0.5, 0.5,0.5);
+           scene.add(gltf.scene);
+           animate();
+           //renderer.render(scene,camera);
+         });
+      }
+
+      let clock = new THREE.Clock();
+
+      function animate() {
+        let delta = clock.getDelta();
+        fp.update(delta);
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+
+      init();
+    </script>
+  </body>
+</html>
