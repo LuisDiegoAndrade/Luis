@@ -14,7 +14,7 @@ def shell():
 @app.route("/linketapp/download")
 def linket_station():
 
-    return '<script> window.location = "linket://deeplink"; alert("App not installed :(!")</script>'
+    return '<script> window.location = "linket://deeplink";</script>'
 
 if __name__ == '__main__':
     app.run(port="8080")
