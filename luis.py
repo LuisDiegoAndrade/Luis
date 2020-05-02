@@ -13,7 +13,8 @@ def shell():
 #testing a deep link for a  mobile app
 @app.route("/linketapp/download")
 def linket_station():
-    return '<a href="https://luisdiegoandrade.pythonanywhere.com">[linket]</a>'
+
+    return '<script> window.location = "linket://deeplink"; alert("App not installed :(!")</script>'
 
 if __name__ == '__main__':
     app.run(port="8080")
