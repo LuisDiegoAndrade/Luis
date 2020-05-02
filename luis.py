@@ -27,7 +27,7 @@ def linket_station():
 
       '''
 
-    return '<a id="link" href="linket://deeplink">[deeplink]</a> <script>{}</script>'.format(script)
+    return '<a id="link" href="https://google.com">[deeplink]</a> <script>{}</script>'.format(script)
 
 if __name__ == '__main__':
     app.run(port="8080")
