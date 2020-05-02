@@ -14,7 +14,20 @@ def shell():
 @app.route("/linketapp/download")
 def linket_station():
 
-    return '<script> window.location = "linket://deeplink";</script>'
+
+    script = '''
+
+      let deeplink = document.getElementById("link");
+      let ev = new MouseEvent('click', {
+        'view': window,
+        'bubbles': true,
+        'cancelable': true
+      });
+      deeplink.dispatchEvent(ev);
+
+      '''
+
+    return '<a id="link" href="linket://deeplink">[deeplink]</a> <script>{}</script>'.format(script)
 
 if __name__ == '__main__':
     app.run(port="8080")
