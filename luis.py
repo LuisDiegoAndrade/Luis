@@ -9,5 +9,11 @@ def home_page():
 def shell():
     return render_template('wash.html')
 
+
+#testing a deep link for a  mobile app
+@app.route("/linketapp/download")
+def linket_station():
+    return 'yoo'
+
 if __name__ == '__main__':
     app.run(port="8080")
