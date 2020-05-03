@@ -23,11 +23,11 @@ def linket_station():
         'bubbles': true,
         'cancelable': true
       });
-      deeplink.dispatchEvent(ev);
+      //deeplink.dispatchEvent(ev);
 
       '''
 
-    return '<a id="link" href="https://google.com">[deeplink]</a> <script>{}</script>'.format(script)
+    return '<a id="link" href="https://luisdiegoandrade.pythonanywhere.com/linketapp">[deeplink]</a> <script>{}</script>'.format(script)
 
 if __name__ == '__main__':
     app.run(port="8080")
