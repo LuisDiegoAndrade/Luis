@@ -11,7 +11,7 @@ def shell():
 
 
 #testing a deep link for a  mobile app
-@app.route("/linketapp/download")
+@app.route("/linketapp")
 def linket_station():
 
 
